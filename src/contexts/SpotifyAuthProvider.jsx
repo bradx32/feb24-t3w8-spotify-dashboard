@@ -14,7 +14,9 @@ export function useSpotifyAuthContext(){
 	return useContext(SpotifyAuthContext);
 }
 
-const clientId = "14e4e57b7b2b4a93a859cf033350c84f";
+// Client ID from app configured in Spotify developer dashboard
+// https://developer.spotify.com/dashboard
+const clientId = "74d0b91062db4b88b881936d03787496";
 
 export function SpotifyAuthProvider({children}){
 	// Code required for Spotify sign-in process, not usable in API requests
@@ -38,14 +40,18 @@ export function SpotifyAuthProvider({children}){
 		// and never again
 	}, []);
 
-	useEffect(() => {
+    useEffect(() => {
 
 		async function getAuthData(){
 			const authData = await getAuthTokens(clientId, userAuthCode);
 			setUserAuthData(authData);
 			// This cleans up the URL in the browser tab 
 			// removing the Spotify auth data so it doesn't impact the pageload useEffect
-			window.history.replace(null, "Spotify Statsboards", "/");
+			// URL before replaceState:
+			// localhost:5173/spotifycallback?code=laksjcnalcknjaslfvjkhsadlfvksndvlsd,mn
+			window.history.replaceState(null, "Spotify Statsboards", "/");
+			// URL after replaceState:
+			// localhost:5173/
 		}
 		if (userAuthCode){
 			getAuthData();
